@@ -15,6 +15,8 @@ Sign-in is mocked: choose an account on the sign-in screen, with no password. Us
 | Bob Martinez | bob@ajaia.test | Owns "Team handbook" (shared with Alice as a viewer) |
 | Carol Singh | carol@ajaia.test | Nothing yet, so you can test sharing from scratch |
 
+You can also click **Create a demo account** on the sign-in screen to make your own (name and email, no password). The three accounts above always stay available. New accounts can share with them and receive shares like any other user.
+
 **A 2-minute review path**
 1. Sign in as Alice. "My documents" and "Shared with me" are listed separately, and each document has an Owner, Can edit or Can view badge.
 2. Click **New document**, rename it in the title field, and type with formatting (headings, bold, italic, underline, lists). Reload the page: the content and formatting persist.
@@ -64,6 +66,7 @@ TEST_DATABASE_URL=postgres://... npm test                  # also runs the Postg
 - `tests/access.test.ts`: the full permission matrix (owner, editor, viewer, no access) for read, edit, rename, share and delete.
 - `tests/import.test.ts`: .md, .txt and .docx conversion; unsafe markup is stripped; bad, empty and oversized files are rejected; content validation.
 - `tests/markdown.test.ts`: Markdown export (marks, lists, nesting, escaping) and a round trip (import, then export, then import gives an identical document); link safety.
+- `tests/users.integration.test.ts`: demo-account creation (normalized names and emails, duplicate emails rejected regardless of case, demo accounts always listed first, and sharing to and from a new account).
 - `tests/sharing.integration.test.ts`: the real data layer against Postgres. Covers shared-with-me listings, role enforcement, role upgrades, stale-save conflicts (including who saved first), and revoking access. **Note:** it truncates the tables in the database you point it at, so use a separate test database.
 
 ## Deploy (Vercel + Neon, both free)

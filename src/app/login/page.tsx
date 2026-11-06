@@ -1,16 +1,16 @@
 import { redirect } from "next/navigation";
-import { db, schema } from "@/db";
 import { getCurrentUser } from "@/lib/session";
+import { listUsers } from "@/lib/users";
+import { CreateAccount } from "./CreateAccount";
 import { SignInList } from "./SignInList";
 
 export const dynamic = "force-dynamic";
 
 export default async function LoginPage() {
   if (await getCurrentUser()) redirect("/");
-  const users = await db
-    .select({ id: schema.users.id, name: schema.users.name, email: schema.users.email })
-    .from(schema.users)
-    .orderBy(schema.users.name);
+  const users = await listUsers();
+  const demo = users.filter((u) => u.seeded);
+  const created = users.filter((u) => !u.seeded);
 
   return (
     <main className="signin">
@@ -19,10 +19,12 @@ export default async function LoginPage() {
         Ajaia Docs
       </span>
       <h1>Sign in</h1>
-      <p className="sub">Choose a demo account. To test sharing, share a document from one account, then switch to another.</p>
-      <SignInList users={users} />
+      <p className="sub">Choose a demo account, or create your own. To test sharing, share a document from one account, then switch to another.</p>
+      <SignInList users={demo} label="Demo accounts" />
+      {created.length > 0 && <SignInList users={created} label="Accounts created by testers" />}
+      <CreateAccount />
       <p className="signin-note">
-        This demo uses mock sign-in with seeded accounts, so there are no passwords.
+        Sign-in is mocked for this demo, so there are no passwords and anyone can use any account.
       </p>
     </main>
   );

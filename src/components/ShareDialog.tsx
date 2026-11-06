@@ -5,7 +5,7 @@ import { api, initials } from "@/lib/api-client";
 
 type Role = "editor" | "viewer";
 type Person = { userId: string; name: string; email: string; role: Role };
-type U = { id: string; name: string; email: string };
+type U = { id: string; name: string; email: string; seeded: boolean };
 
 export function ShareDialog({ docId, onClose }: { docId: string; onClose: () => void }) {
   const [people, setPeople] = useState<Person[] | null>(null);
@@ -96,7 +96,7 @@ export function ShareDialog({ docId, onClose }: { docId: string; onClose: () => 
             ))}
           </datalist>
         </form>
-        <p className="helper">Demo accounts: {directory.map((u) => u.email).join(", ")}</p>
+        <p className="helper">Demo accounts: {directory.filter((u) => u.seeded).map((u) => u.email).join(", ")}. Accounts testers create are suggested as you type.</p>
         {error && <p className="form-error" role="alert">{error}</p>}
 
         <ul className="people" aria-label="People with access">

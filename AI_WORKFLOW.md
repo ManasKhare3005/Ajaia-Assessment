@@ -28,7 +28,7 @@ These happened during the session:
 
 ## How correctness, UX and reliability were verified
 
-- **Automated tests (58):** the permission matrix, file import (including script stripping and rejection of bad, empty and oversized files), schema validation, Markdown export with an import/export round trip, link safety, and Postgres integration tests for sharing, role changes, revoking access, and stale-save conflicts.
+- **Automated tests (63):** the permission matrix, file import (including script stripping and rejection of bad, empty and oversized files), schema validation, Markdown export with an import/export round trip, link safety, and Postgres integration tests for demo-account creation, sharing, role changes, revoking access, and stale-save conflicts.
 - **End-to-end checks:** the live Vercel deployment was exercised in a real browser (sign in, create, format, reload, share as viewer, open as the viewer). Before that, curl against a local production build for auth (including a forged cookie), every role boundary, validation errors, and import. Headless Chrome for the full user flows on desktop and mobile widths, including two signed-in users editing the same document at once. The only console output was the browser logging the expected 409 during the conflict test.
 - **Not taking AI output at face value:** every test was read for *what* it asserts, not just whether it passes (see the conflict-test example above).
 

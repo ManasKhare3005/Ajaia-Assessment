@@ -6,7 +6,7 @@ import { api, initials } from "@/lib/api-client";
 
 type U = { id: string; name: string; email: string };
 
-export function SignInList({ users }: { users: U[] }) {
+export function SignInList({ users, label }: { users: U[]; label: string }) {
   const router = useRouter();
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +29,8 @@ export function SignInList({ users }: { users: U[] }) {
   }
 
   return (
-    <>
+    <section className="signin-group" aria-label={label}>
+      <h2 className="signin-label">{label}</h2>
       <ul className="signin-list">
         {users.map((u) => (
           <li key={u.id}>
@@ -48,6 +49,6 @@ export function SignInList({ users }: { users: U[] }) {
         ))}
       </ul>
       {error && <p className="form-error">{error}</p>}
-    </>
+    </section>
   );
 }

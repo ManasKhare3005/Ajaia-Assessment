@@ -15,6 +15,13 @@
       "when": 1793996677363,
       "tag": "0001_last_edited_by",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794003063546,
+      "tag": "0002_user_created_at",
+      "breakpoints": true
     }
   ]
 }

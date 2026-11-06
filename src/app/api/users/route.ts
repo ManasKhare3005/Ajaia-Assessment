@@ -1,13 +1,27 @@
 import { NextResponse } from "next/server";
-import { db, schema } from "@/db";
-import { route } from "@/lib/http";
+import { z } from "zod";
+import { parseJson, route } from "@/lib/http";
+import { withSession } from "@/lib/session";
+import { createUser, listUsers } from "@/lib/users";
 
-// Demo-only directory of seeded accounts (used by the sign-in screen and the
-// share dialog). A real product would search users rather than list them all.
+// Demo-only directory (sign-in screen and share-dialog suggestions): the seeded
+// accounts plus the most recently created ones. A real product would search
+// users rather than list them.
 export const GET = route(async () => {
-  const users = await db
-    .select({ id: schema.users.id, name: schema.users.name, email: schema.users.email })
-    .from(schema.users)
-    .orderBy(schema.users.name);
-  return NextResponse.json({ users });
+  return NextResponse.json({ users: await listUsers() });
+});
+
+const Body = z.object({
+  name: z.string().trim().min(1, "Enter your name.").max(60, "Name is too long (60 characters max)."),
+  email: z.email({ message: "Enter a valid email address." }).max(254, "Email is too long."),
+});
+
+/** Creates a demo account and signs the new user in. No password, by design. */
+export const POST = route(async (req) => {
+  const input = await parseJson(req, Body);
+  const user = await createUser(input);
+  return withSession(
+    NextResponse.json({ user: { id: user.id, name: user.name, email: user.email } }, { status: 201 }),
+    user.id,
+  );
 });

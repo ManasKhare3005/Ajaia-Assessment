@@ -15,6 +15,7 @@ Mock sign-in with no passwords. Choose an account on the sign-in screen, and use
 - `alice@ajaia.test`: owns "Q4 planning", shared with Bob as an editor
 - `bob@ajaia.test`: owns "Team handbook", shared with Alice as a viewer
 - `carol@ajaia.test`: starts empty; use her to test sharing from scratch
+- Or click **Create a demo account** on the sign-in screen to make your own (name and email, no password). The three above remain available.
 
 ## What's included
 
@@ -32,7 +33,7 @@ Mock sign-in with no passwords. Choose an account on the sign-in screen, and use
 
 ## Status
 
-**Working end to end:** create, rename, edit with formatting (headings, bold, italic, underline, lists, quotes, alignment, links), autosave and reopen; import .txt, .md and .docx; export to Markdown and PDF; share as editor or viewer, change roles, revoke access; owned and shared lists with last editor; read-only viewer mode; stale-save conflict detection with recovery that keeps both versions; validation and error messages; 58 automated tests.
+**Working end to end:** create, rename, edit with formatting (headings, bold, italic, underline, lists, quotes, alignment, links), autosave and reopen; import .txt, .md and .docx; export to Markdown and PDF; share as editor or viewer, change roles, revoke access; owned and shared lists with last editor; read-only viewer mode; stale-save conflict detection with recovery that keeps both versions; create-your-own demo accounts alongside the three seeded ones; validation and error messages; 63 automated tests.
 
 **Not built (deliberate scope cuts, see ARCHITECTURE.md):** real-time co-editing and presence, real authentication, comments, version history.
 

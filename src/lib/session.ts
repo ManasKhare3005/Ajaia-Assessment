@@ -6,6 +6,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
+import type { NextResponse } from "next/server";
 import { db, schema } from "@/db";
 import { HttpError } from "./http";
 
@@ -34,6 +35,18 @@ export function decodeSession(token: string | undefined): string | null {
   const expected = Buffer.from(sign(userId));
   if (given.length !== expected.length || !timingSafeEqual(given, expected)) return null;
   return userId;
+}
+
+/** Signs the user in on this response by attaching the session cookie. */
+export function withSession(res: NextResponse, userId: string) {
+  res.cookies.set(SESSION_COOKIE, encodeSession(userId), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7,
+  });
+  return res;
 }
 
 export async function getCurrentUser() {

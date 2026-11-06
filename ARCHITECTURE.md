@@ -17,7 +17,7 @@ The brief asks for depth in a few areas instead of breadth. I put the depth wher
 | Next.js (one app for the UI and the API) | One deploy, one language, server components load data without a client fetch | API routes are tied to Next. Fine at this scope. |
 | TipTap | Mature ProseMirror wrapper, schema-based, works on the server for import and validation | Adds about 130 kB to the editor page |
 | Postgres (Neon) + Drizzle | Real relational data for shares. Free hosted tier, so reviewers pay nothing. Drizzle is pure JavaScript with SQL migrations and no binary engine. | SQLite would be simpler locally, but Vercel's filesystem isn't persistent |
-| Mock auth with an HMAC-signed, httpOnly cookie | The brief allows seeded users. Signing the cookie means a user id can't be forged by editing it. | No passwords or real identity. Swapping in a real identity provider only changes `src/lib/session.ts`. |
+| Mock auth with an HMAC-signed, httpOnly cookie | The brief allows seeded users. Signing the cookie means a user id can't be forged by editing it. | No passwords or real identity. Swapping in a real identity provider only changes `src/lib/session.ts`. Testers can also create their own demo account (name and email, no password); the three seeded accounts always stay listed first, and the number of accounts is capped so a public demo can't grow without bound. |
 | Owner + editor/viewer roles | One step beyond basic access (an optional stretch item), and it exercises the permission design | No commenter role, no link sharing |
 | Import creates a new document | The clearest product flow ("bring my existing doc in") | No attachments or importing into an existing draft |
 | Markdown export on the server; PDF through print | Markdown reuses the stored JSON and is tested by a round trip through the importer. Browser print gives a good PDF with no headless browser on the server. | PDF quality depends on the browser's print dialog |
@@ -26,7 +26,7 @@ The brief asks for depth in a few areas instead of breadth. I put the depth wher
 ## Data model
 
 ```
-users(id, email unique, name)
+users(id, email unique, name, created_at)
 documents(id, title, content jsonb, owner_id → users, version, last_edited_by_id → users, created_at, updated_at)
 shares(document_id → documents, user_id → users, role editor|viewer)   PK(document_id, user_id)
 ```
