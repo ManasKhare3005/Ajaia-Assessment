@@ -4,7 +4,7 @@
 
 ## Links
 
-- **Live app:** _LIVE_URL_
+- **Live app:** https://ajaia-assessment-kappa.vercel.app
 - **Walkthrough video:** see `VIDEO_URL.txt`
 - **Source:** this folder (also on GitHub: https://github.com/ManasKhare3005/Ajaia-Assessment)
 

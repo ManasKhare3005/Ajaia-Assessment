@@ -25,11 +25,12 @@ These happened during the session:
 - **Toolbar overflow.** Adding alignment, quote and link buttons wrapped the toolbar onto two lines, so those controls became icons with accessible labels.
 - **UI fixes from screenshot review:** the toolbar wasn't aligned with the page, the "Text" button lit up inside lists, the topbar didn't fit on mobile, and the import hint copy was awkward.
 - **Fonts.** The default `next/font/google` setup fetches fonts at build time, and the build environment blocked that. Switched to self-hosted `@fontsource` packages, which also removes a runtime dependency on Google.
+- **A wrong diagnosis during deployment.** After the first deploy, the obvious URL (`ajaia-assessment.vercel.app`) returned 500s, and the AI's first theory was that Vercel had picked Node 26. It pinned Node 22 and redeployed, but the 500 persisted. The request logs showed the real cause: our requests never reached the project at all, because that URL belongs to someone else's Vercel project. Ours is `ajaia-assessment-kappa.vercel.app`. The Node pin and a Postgres pool error handler were kept as sensible hardening, but they weren't the fix. The lesson: check where the request actually went before changing code.
 
 ## How correctness, UX and reliability were verified
 
 - **Automated tests (58):** the permission matrix, file import (including script stripping and rejection of bad, empty and oversized files), schema validation, Markdown export with an import/export round trip, link safety, and Postgres integration tests for sharing, role changes, revoking access, and stale-save conflicts.
-- **End-to-end checks:** curl against a production build for auth (including a forged cookie), every role boundary, validation errors, and import. Headless Chrome for the full user flows on desktop and mobile widths, including two signed-in users editing the same document at once. The only console output was the browser logging the expected 409 during the conflict test.
+- **End-to-end checks:** the live Vercel deployment was exercised in a real browser (sign in, create, format, reload, share as viewer, open as the viewer). Before that, curl against a local production build for auth (including a forged cookie), every role boundary, validation errors, and import. Headless Chrome for the full user flows on desktop and mobile widths, including two signed-in users editing the same document at once. The only console output was the browser logging the expected 409 during the conflict test.
 - **Not taking AI output at face value:** every test was read for *what* it asserts, not just whether it passes (see the conflict-test example above).
 
 ## My review (Manas, fill in)

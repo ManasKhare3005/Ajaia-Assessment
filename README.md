@@ -2,7 +2,7 @@
 
 A lightweight collaborative document editor: create and format documents, import files, and share them with other users as editors or viewers.
 
-- **Live app:** _LIVE_URL_ (see `SUBMISSION.md`)
+- **Live app:** https://ajaia-assessment-kappa.vercel.app (see `SUBMISSION.md`)
 - **Stack:** Next.js 15 (App Router) + TypeScript, TipTap editor, Postgres via Drizzle ORM, Vitest. Deployed on Vercel with a free Neon Postgres database.
 
 ## Demo accounts
