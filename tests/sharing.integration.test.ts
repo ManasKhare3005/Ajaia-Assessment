@@ -51,7 +51,8 @@ describe.skipIf(!url)("sharing and saving against Postgres", () => {
     expect(forAlice.owned.map((d) => d.id)).toEqual([id]);
     expect(forAlice.owned[0].sharedWithCount).toBe(1);
     expect(forBob.owned).toHaveLength(0);
-    expect(forBob.shared).toMatchObject([{ id, access: "viewer", ownerName: "Alice" }]);
+    expect(forBob.shared).toMatchObject([{ id, access: "viewer", ownerName: "Alice", lastEditedByName: "Alice" }]);
+    expect(forAlice.owned[0].lastEditedByName).toBeNull(); // her own edit: no name shown
     expect(forCarol.shared).toHaveLength(0);
     await expect(lib.getDocumentForUser(id, carol)).rejects.toMatchObject({ status: 404 });
   });
@@ -74,7 +75,7 @@ describe.skipIf(!url)("sharing and saving against Postgres", () => {
 
     await lib.updateDocument(id, bob, { content: doc("bob's edit"), baseVersion: 1 });
     await expect(lib.updateDocument(id, alice, { content: doc("alice's stale edit"), baseVersion: 1 }))
-      .rejects.toMatchObject({ status: 409, code: "version_conflict" });
+      .rejects.toMatchObject({ status: 409, code: "version_conflict", extra: { savedBy: "Bob", latestVersion: 2 } });
 
     const { doc: saved } = await lib.getDocumentForUser(id, alice);
     expect(JSON.stringify(saved.content)).toContain("bob's edit");

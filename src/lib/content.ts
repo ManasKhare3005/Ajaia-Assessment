@@ -1,6 +1,6 @@
 import { getSchema, type JSONContent } from "@tiptap/core";
 import { Node } from "@tiptap/pm/model";
-import { editorExtensions } from "./editor-extensions";
+import { editorExtensions, isSafeHref } from "./editor-extensions";
 
 const schema = getSchema(editorExtensions);
 
@@ -22,13 +22,22 @@ export function validateContent(
   if (JSON.stringify(value).length > MAX_CONTENT_BYTES) {
     return { ok: false, reason: "Document is too large (limit is about 1 MB)." };
   }
+  let node: Node;
   try {
-    const node = Node.fromJSON(schema, value);
+    node = Node.fromJSON(schema, value);
     node.check();
-    return { ok: true, content: node.toJSON() as JSONContent };
   } catch {
     return { ok: false, reason: "Content does not match the document format." };
   }
+  // The schema checks structure but not attribute values: block javascript: and
+  // other unsafe link targets even if a client sends them directly.
+  let unsafeLink = false;
+  node.descendants((n) => {
+    if (n.marks.some((m) => m.type.name === "link" && !isSafeHref(m.attrs.href))) unsafeLink = true;
+    return !unsafeLink;
+  });
+  if (unsafeLink) return { ok: false, reason: "Links must start with http://, https:// or mailto:." };
+  return { ok: true, content: node.toJSON() as JSONContent };
 }
 
 export function normalizeTitle(raw: string): string {

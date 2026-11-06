@@ -25,14 +25,14 @@ Mock sign-in with no passwords. Choose an account on the sign-in screen, and use
 | `AI_WORKFLOW.md` | AI tools used, where they helped, what was changed or rejected, how it was verified |
 | `SUBMISSION.md` | This file |
 | `VIDEO_URL.txt` | Walkthrough video link |
-| `screenshots/` | Dashboard, editor, share dialog, viewer mode, import, conflict handling, mobile |
+| `screenshots/` | Sign-in, dashboard, editor, share dialog, viewer mode, import, conflict and recovery, export menu, mobile |
 | `samples/` | Sample .md, .txt and .docx files for testing import |
 | `src/`, `tests/`, `drizzle/`, `scripts/` | Source code, tests, SQL migrations, migration and seed script |
 
 ## Status
 
-**Working end to end:** create, rename, edit with formatting, autosave and reopen; import .txt, .md and .docx; share as editor or viewer, change roles, revoke access; owned and shared lists; read-only viewer mode; stale-save conflict detection; validation and error messages; 44 automated tests.
+**Working end to end:** create, rename, edit with formatting (headings, bold, italic, underline, lists, quotes, alignment, links), autosave and reopen; import .txt, .md and .docx; export to Markdown and PDF; share as editor or viewer, change roles, revoke access; owned and shared lists with last editor; read-only viewer mode; stale-save conflict detection with recovery that keeps both versions; validation and error messages; 58 automated tests.
 
-**Not built (deliberate scope cuts, see ARCHITECTURE.md):** real-time co-editing and presence, real authentication, comments, version history, export.
+**Not built (deliberate scope cuts, see ARCHITECTURE.md):** real-time co-editing and presence, real authentication, comments, version history.
 
-**Next 2–4 hours:** version history with restore, "someone else just saved" live notices, Markdown/PDF export, Playwright end-to-end tests in CI.
+**Next 2–4 hours:** "someone else just saved" live notices, version history with restore, Playwright end-to-end tests in CI, real authentication.

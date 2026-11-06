@@ -113,7 +113,10 @@ export function Dashboard({ firstName, owned, shared }: Props) {
                     {d.title}
                   </Link>
                   <span className="doc-meta">
-                    <span className="when">Edited {timeAgo(d.updatedAt)}</span>
+                    <span className="when">
+                      Edited {d.lastEditedByName ? `by ${d.lastEditedByName} ` : ""}
+                      {timeAgo(d.updatedAt)}
+                    </span>
                     {d.sharedWithCount > 0 &&
                       ` — shared with ${d.sharedWithCount} ${d.sharedWithCount === 1 ? "person" : "people"}`}
                   </span>
@@ -151,7 +154,10 @@ export function Dashboard({ firstName, owned, shared }: Props) {
                   </Link>
                   <span className="doc-meta">
                     From {d.ownerName}
-                    <span className="when"> — edited {timeAgo(d.updatedAt)}</span>
+                    <span className="when">
+                      {" "}— edited {d.lastEditedByName ? `by ${d.lastEditedByName} ` : "by you "}
+                      {timeAgo(d.updatedAt)}
+                    </span>
                   </span>
                 </div>
                 <span className={d.access === "viewer" ? "badge badge-muted" : "badge"}>

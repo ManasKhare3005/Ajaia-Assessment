@@ -6,6 +6,7 @@ export class HttpError extends Error {
     public status: number,
     message: string,
     public code?: string,
+    public extra?: Record<string, unknown>,
   ) {
     super(message);
   }
@@ -30,7 +31,10 @@ export function route<C>(handler: Handler<C>): Handler<C> {
       return await handler(req, ctx);
     } catch (err) {
       if (err instanceof HttpError) {
-        return NextResponse.json({ error: err.message, code: err.code }, { status: err.status });
+        return NextResponse.json(
+          { error: err.message, code: err.code, ...err.extra },
+          { status: err.status },
+        );
       }
       if (err instanceof ZodError) {
         const message = err.issues.map((i) => i.message).join(" ");

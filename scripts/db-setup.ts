@@ -90,7 +90,7 @@ async function main() {
     if (existing.length) continue;
     const [doc] = await db
       .insert(documents)
-      .values({ title: d.title, content: d.content, ownerId: owner.id })
+      .values({ title: d.title, content: d.content, ownerId: owner.id, lastEditedById: owner.id })
       .returning();
     for (const s of d.shareWith) {
       await db

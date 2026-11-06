@@ -21,16 +21,20 @@ Sign-in is mocked: choose an account on the sign-in screen, with no password. Us
 3. Click **Share**, and add `carol@ajaia.test` as **Can view**.
 4. Click **Switch user**, then choose Carol. The document is under "Shared with me", and opening it shows a read-only view with no toolbar.
 5. Back as Alice, click **Import file**, then upload a `.md`, `.txt` or `.docx` file. It opens as a new editable document. Sample files are in `samples/`.
+6. **Conflict handling:** open "Q4 planning" as Alice in one browser and as Bob in another (or a private window). Type in Bob's window and wait for "Saved", then type in Alice's. Alice is told Bob saved first, and after **Load latest version** her own edits are kept beside the document.
+7. Click **Download → Markdown** to export.
 
 ## Features
 
 | Area | What works |
 | --- | --- |
-| Editing | Create, rename, edit, autosave (about 0.8 s after typing stops), with save status in the header. Ctrl/Cmd+S saves immediately. Formatting: H1–H3, bold, italic, underline, bulleted and numbered lists, undo and redo. |
+| Editing | Create, rename, edit, autosave (about 0.8 s after typing stops), with save status in the header. Ctrl/Cmd+S saves immediately. Formatting: H1–H3, bold, italic, underline, bulleted and numbered lists, quotes, left/center/right alignment, links (Ctrl/Cmd+K), clear formatting, undo and redo. Live word and character count. |
 | File upload | Import a **.txt, .md or .docx file (max 5 MB)** as a new document. Formatting is kept where the editor supports it, and unsupported or unsafe markup (scripts, images, tables) is dropped. Other file types are rejected with a clear message. |
 | Sharing | Each document has one owner. The owner shares by email as **editor** or **viewer**, can change a role, and can remove access. Editors can edit and rename. Only the owner can share or delete. |
 | Persistence | Postgres. Content is stored as TipTap JSON, so formatting round-trips exactly. |
-| Concurrent saves | Each save carries the version it was based on. If someone else saved first, the server rejects the save (HTTP 409) instead of overwriting their work, and the UI asks you to reload. |
+| Concurrent saves | Each save carries the version it was based on. If someone else saved first, the server rejects the save (HTTP 409) and names who saved. The editor then loads the latest version in place and keeps your unsaved edits alongside it, so nothing is lost. You can copy from them, **Use my version**, or discard them. Document lists show who edited last. |
+| Export | **Download → Markdown (.md)**, generated on the server; anyone with read access can export. **Download → PDF** uses the browser's print-to-PDF with a print stylesheet that hides the app chrome. |
+| Safety | Links are limited to http, https and mailto, checked in the editor, on import and on every save. A `javascript:` link sent directly to the API is rejected. |
 
 ## Run locally
 
@@ -59,7 +63,8 @@ TEST_DATABASE_URL=postgres://... npm test                  # also runs the Postg
 
 - `tests/access.test.ts`: the full permission matrix (owner, editor, viewer, no access) for read, edit, rename, share and delete.
 - `tests/import.test.ts`: .md, .txt and .docx conversion; unsafe markup is stripped; bad, empty and oversized files are rejected; content validation.
-- `tests/sharing.integration.test.ts`: the real data layer against Postgres. Covers shared-with-me listings, role enforcement, role upgrades, stale-save conflicts, and revoking access. **Note:** it truncates the tables in the database you point it at, so use a separate test database.
+- `tests/markdown.test.ts`: Markdown export (marks, lists, nesting, escaping) and a round trip (import, then export, then import gives an identical document); link safety.
+- `tests/sharing.integration.test.ts`: the real data layer against Postgres. Covers shared-with-me listings, role enforcement, role upgrades, stale-save conflicts (including who saved first), and revoking access. **Note:** it truncates the tables in the database you point it at, so use a separate test database.
 
 ## Deploy (Vercel + Neon, both free)
 
@@ -75,6 +80,7 @@ src/components/     DocEditor (autosave and conflicts), Toolbar, ShareDialog, Da
 src/lib/access.ts   permission rules, used by every API route
 src/lib/documents.ts data access; every function checks permissions first
 src/lib/import.ts   file to document conversion
+src/lib/markdown.ts document to Markdown export
 src/lib/content.ts  document validation against the editor schema
 src/db/             Drizzle schema and client; migrations are in drizzle/
 scripts/db-setup.ts migrations and idempotent seed

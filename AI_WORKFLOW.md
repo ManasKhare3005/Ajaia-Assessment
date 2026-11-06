@@ -19,14 +19,17 @@ These happened during the session:
 - **ORM swap.** The first plan used Prisma. Its engine binaries couldn't be downloaded in the build environment, and Prisma also adds cold-start weight on serverless. Switched to Drizzle (pure JavaScript, plain SQL migrations).
 - **Autosave retry logic.** The first version of the editor's save loop read stale React state when deciding whether to retry, so it could retry forever after a server error. Rewritten so that it only auto-saves again after a *successful* save that had more edits queued. After a failure it waits for a manual retry or the next edit.
 - **Conflict test that passed for the wrong reason.** The first smoke test of "stale save is rejected" sent an empty document, which failed schema validation, not the version check. Caught by reading the response, then re-tested with valid content to confirm the real 409.
-- **Editor locking on conflict.** After a conflict the editor originally stayed editable, so a user could keep typing text that would never save. It now locks until reload.
+- **Conflict UX, rejected twice.** After a conflict the editor first stayed editable, so a user could keep typing text that would never save. The next version locked it and asked for a reload, but reloading threw away the user's recent edits. The final version loads the latest copy in place and keeps the user's edits beside it.
+- **Link insertion bug found in browser testing.** Typing right after adding a link lost the first keystrokes and kept extending the link. The cause: TipTap's `focus()` waits a frame, so keys went to the popover's button. Fixed by focusing synchronously and ending the link mark after inserting it.
+- **Missing server-side link check.** The schema validation accepted a `javascript:` link sent straight to the API, because it checks structure, not attribute values. Added explicit link validation, with tests.
+- **Toolbar overflow.** Adding alignment, quote and link buttons wrapped the toolbar onto two lines, so those controls became icons with accessible labels.
 - **UI fixes from screenshot review:** the toolbar wasn't aligned with the page, the "Text" button lit up inside lists, the topbar didn't fit on mobile, and the import hint copy was awkward.
 - **Fonts.** The default `next/font/google` setup fetches fonts at build time, and the build environment blocked that. Switched to self-hosted `@fontsource` packages, which also removes a runtime dependency on Google.
 
 ## How correctness, UX and reliability were verified
 
-- **Automated tests (44):** the permission matrix, file import (including script stripping and rejection of bad, empty and oversized files), schema validation, and Postgres integration tests for sharing, role changes, revoking access, and stale-save conflicts.
-- **End-to-end checks:** curl against a production build for auth (including a forged cookie), every role boundary, validation errors, and import. Headless Chrome for the full user flows on desktop and mobile widths, with zero console errors.
+- **Automated tests (58):** the permission matrix, file import (including script stripping and rejection of bad, empty and oversized files), schema validation, Markdown export with an import/export round trip, link safety, and Postgres integration tests for sharing, role changes, revoking access, and stale-save conflicts.
+- **End-to-end checks:** curl against a production build for auth (including a forged cookie), every role boundary, validation errors, and import. Headless Chrome for the full user flows on desktop and mobile widths, including two signed-in users editing the same document at once. The only console output was the browser logging the expected 409 during the conflict test.
 - **Not taking AI output at face value:** every test was read for *what* it asserts, not just whether it passes (see the conflict-test example above).
 
 ## My review (Manas, fill in)

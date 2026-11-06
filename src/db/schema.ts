@@ -29,6 +29,8 @@ export const documents = pgTable("documents", {
   // Incremented on every write; used for optimistic concurrency so two people
   // saving the same doc can't silently overwrite each other.
   version: integer("version").notNull().default(1),
+  // Who last changed content or title — shown in lists and in conflict messages.
+  lastEditedById: uuid("last_edited_by_id").references(() => users.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

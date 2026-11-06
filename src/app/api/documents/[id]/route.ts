@@ -10,8 +10,8 @@ type Ctx = { params: Promise<{ id: string }> };
 export const GET = route<Ctx>(async (_req, { params }) => {
   const user = await requireUser();
   const { id } = await params;
-  const { doc, access, ownerName } = await getDocumentForUser(id, user);
-  return NextResponse.json({ ...doc, access, ownerName });
+  const { doc, access, ownerName, lastEditedByName } = await getDocumentForUser(id, user);
+  return NextResponse.json({ ...doc, access, ownerName, lastEditedByName });
 });
 
 const Patch = z

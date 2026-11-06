@@ -3,6 +3,8 @@ export class ApiError extends Error {
     public status: number,
     message: string,
     public code?: string,
+    /** Any extra fields the server sent with the error (e.g. who saved first). */
+    public data: Record<string, unknown> = {},
   ) {
     super(message);
   }
@@ -25,7 +27,7 @@ export async function api<T = unknown>(path: string, init?: RequestInit): Promis
   if (res.status === 204) return undefined as T;
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new ApiError(res.status, data.error ?? `Request failed (${res.status}).`, data.code);
+    throw new ApiError(res.status, data.error ?? `Request failed (${res.status}).`, data.code, data);
   }
   return data as T;
 }
