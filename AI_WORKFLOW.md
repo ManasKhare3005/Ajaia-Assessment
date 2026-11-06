@@ -33,8 +33,13 @@ These happened during the session:
 - **End-to-end checks:** the live Vercel deployment was exercised in a real browser (sign in, create, format, reload, share as viewer, open as the viewer). Before that, curl against a local production build for auth (including a forged cookie), every role boundary, validation errors, and import. Headless Chrome for the full user flows on desktop and mobile widths, including two signed-in users editing the same document at once. The only console output was the browser logging the expected 409 during the conflict test.
 - **Not taking AI output at face value:** every test was read for *what* it asserts, not just whether it passes (see the conflict-test example above).
 
-## My review (Manas, fill in)
+## My review
 
-- _What did you read closely or change yourself?_
-- _Any decision where you overrode the AI's suggestion?_
-- _What did you test by hand on the live deployment?_
+I used Claude as the main implementer and kept the product and scope decisions for myself.
+
+- **Scope and stack.** I chose the stack (Next.js, TipTap, Postgres on Neon) and the working split: Claude writes the code in stages, and I review each stage and make the calls.
+- **Asking for criticism, then prioritizing.** Once the first version worked, I asked for an honest 1–10 rating instead of a summary. From the weaknesses it listed, I picked three to fix: the conflict handling losing user edits, a thin editor toolbar, and no export. I left real-time co-editing and real authentication out on purpose, because they couldn't be done well in the timebox.
+- **Keeping the infrastructure minimal.** Neon's setup offered extra services (object storage, auth, functions). I kept it to Postgres only, because the app never stores files, and an unused bucket would be one more thing to explain and secure.
+- **Secrets stayed with me.** Claude set up the Vercel project and the environment variable names, but I entered the database connection string and the session secret myself and completed Vercel's identity check.
+- **What I read closely:** [fill in: for example, `src/lib/access.ts` (the permission rules), `updateDocument` in `src/lib/documents.ts` (the version check), and the save loop in `src/components/DocEditor.tsx`, plus anything you'd change or found unclear].
+- **What I tested by hand on the live site:** [fill in after you click through it yourself, for example: shared a doc as a viewer, opened it in a second browser as an editor, triggered a save conflict].

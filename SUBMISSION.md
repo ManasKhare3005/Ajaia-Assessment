@@ -23,6 +23,7 @@ Mock sign-in with no passwords. Choose an account on the sign-in screen, and use
 | `README.md` | Features, demo accounts, local setup, tests, deployment |
 | `ARCHITECTURE.md` | What I prioritized, key decisions and tradeoffs, data model, what's next |
 | `AI_WORKFLOW.md` | AI tools used, where they helped, what was changed or rejected, how it was verified |
+| `pdf/` | PDF copies of the architecture note, AI workflow note and README (`npm run docs:pdf` regenerates them) |
 | `SUBMISSION.md` | This file |
 | `VIDEO_URL.txt` | Walkthrough video link |
 | `screenshots/` | Sign-in, dashboard, editor, share dialog, viewer mode, import, conflict and recovery, export menu, mobile |
