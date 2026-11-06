@@ -1,10 +1,9 @@
 # AI workflow note
 
-> **Draft. Manas: rewrite this in your own words before submitting.** The facts below are accurate for the build session. The "My review" section is yours to fill in with what you actually checked, changed or pushed back on.
-
 ## Tools used
 
 - **Claude (Opus 5.5, in the Claude app with a code workspace)** as a pair programmer. It scaffolded the app, wrote most of the first-pass code, ran the tests and a headless-browser walkthrough, and drafted these notes. I set the scope, chose the stack and sharing model, and reviewed each stage.
+- **Walkthrough video.** Claude wrote the narration script from these notes and screen-recorded the walkthrough with Playwright, against a local production build of the same code that's deployed. The voiceover is an open-source text-to-speech voice (Kokoro, "Heart"), not my own voice.
 
 ## Where AI materially sped things up
 
