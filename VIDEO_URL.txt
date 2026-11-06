@@ -1,4 +1,4 @@
-Walkthrough video (unlisted): _VIDEO_URL_
+Walkthrough video (unlisted): https://youtu.be/gbsED0s2HMQ
 
 Length: about 3.5 minutes.
 Note: the narration is an AI text-to-speech voice (Kokoro, "Heart") reading a script written from the project notes, not my own voice. See AI_WORKFLOW.md.
