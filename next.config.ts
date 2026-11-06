@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Server-only parsers: load from node_modules at runtime instead of bundling.
+  serverExternalPackages: ["happy-dom", "mammoth", "pg"],
 };
 
 export default nextConfig;

@@ -1,0 +1,6 @@
+Meeting notes
+
+Attendees: Alice, Bob, Carol
+Plain text import keeps paragraphs and line breaks.
+
+Action items are tracked in the Q4 planning doc.
