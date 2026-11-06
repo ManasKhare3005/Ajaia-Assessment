@@ -9,12 +9,12 @@ function createPool() {
   if (!connectionString) {
     throw new Error("DATABASE_URL is not set. Copy .env.example to .env.local.");
   }
-  const needsSsl = /sslmode=require/.test(connectionString);
-  return new Pool({
-    connectionString,
-    max: 5,
-    ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
-  });
+  // SSL settings come from the connection string (Neon's includes sslmode=require).
+  const pool = new Pool({ connectionString, max: 5, idleTimeoutMillis: 10_000 });
+  // Without a listener, an idle connection dropped by the server (common on
+  // serverless Postgres) would crash the whole process instead of one request.
+  pool.on("error", (err) => console.error("Postgres pool error:", err.message));
+  return pool;
 }
 
 // Reuse the pool across hot reloads in dev and warm serverless invocations.

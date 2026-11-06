@@ -67,10 +67,8 @@ const SEED_DOCS = [
 async function main() {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not set");
-  const pool = new Pool({
-    connectionString: url,
-    ssl: /sslmode=require/.test(url) ? { rejectUnauthorized: false } : undefined,
-  });
+  // SSL settings come from the connection string (Neon's includes sslmode=require).
+  const pool = new Pool({ connectionString: url });
   const db = drizzle(pool, { schema });
 
   await migrate(db, { migrationsFolder: "./drizzle" });
